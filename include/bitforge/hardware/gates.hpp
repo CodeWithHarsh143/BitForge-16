@@ -1,33 +1,35 @@
 #pragma once
 
 #include <array>
+using Bits16 = std::array<bool, 16>;
+using Bits8 = std::array<bool, 8>;
+namespace bitforge::hardware
+{
 
-namespace bitforge::hardware {
+  //=================================
+  // 1-Bit Gates
+  //=================================
 
-//=================================
-// 1-Bit Gates
-//=================================
+  bool Nand(bool a, bool b);
+  bool Not(bool a);
+  bool And(bool a, bool b);
+  bool Or(bool a, bool b);
+  bool Xor(bool a, bool b);
 
-bool Nand(bool a, bool b);
-bool Not(bool a);
-bool And(bool a, bool b);
-bool Or(bool a, bool b);
-bool Xor(bool a, bool b);
+  //=================================
+  // 16-Bit Gates
+  //=================================
 
-//=================================
-// 16-Bit Gates
-//=================================
+  Bits16 Nand16(const Bits16 &a16, const Bits16 &b16);
+  Bits16 Not16(const Bits16 &a16);
+  Bits16 And16(const Bits16 &a16, const Bits16 &b16);
+  Bits16 Or16(const Bits16 &a16, const Bits16 &b16);
+  Bits16 Xor16(const Bits16 &a16, const Bits16 &b16);
 
-std::array<bool, 16> Nand16(const std::array<bool, 16> &a16, const std::array<bool, 16> &b16);
-std::array<bool, 16> Not16(const std::array<bool, 16> &a16);
-std::array<bool, 16> And16(const std::array<bool, 16> &a16, const std::array<bool, 16> &b16);
-std::array<bool, 16> Or16(const std::array<bool, 16> &a16, const std::array<bool, 16> &b16);
-std::array<bool, 16> Xor16(const std::array<bool, 16> &a16, const std::array<bool, 16> &b16);
+  //=================================
+  // Additional Gates
+  //=================================
 
-//=================================
-// Additional Gates
-//=================================
-
-bool Or8Way(const std::array<bool, 8> &in8);
+  bool Or8Way(const Bits8 &in8);
 
 } // namespace bitforge::hardware
