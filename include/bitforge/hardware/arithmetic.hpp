@@ -1,10 +1,18 @@
 #pragma once
 
-namespace bitforge::hardware {
+namespace bitforge::hardware
+{
 
-struct HalfAdderResult {
-  bool sum;
-  bool carry;
-};
-HalfAdderResult half_adder(bool a, bool b);
+  struct HalfAdderResult
+  {
+    const bool sum;
+    const bool carry;
+  };
+  struct FullAdderResult
+  {
+    const bool sum;
+    const bool carry;
+  };
+  HalfAdderResult half_adder(bool a, bool b);
+  FullAdderResult full_adder(bool a, bool b, bool c);
 } // namespace bitforge::hardware
