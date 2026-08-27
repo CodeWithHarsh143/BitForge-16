@@ -1,47 +1,49 @@
 #pragma once
 
 #include <array>
-#include <utility>
+using Bits2 = std::array<bool, 2>;
+using Bits3 = std::array<bool, 3>;
+using Bits4 = std::array<bool, 4>;
+using Bits8 = std::array<bool, 8>;
+using Bits16 = std::array<bool, 16>;
+namespace bitforge::hardware
+{
 
-namespace bitforge::hardware {
+  //=================================
+  // 1-Bit Multiplexers
+  //=================================
 
-//=================================
-// 1-Bit Multiplexers
-//=================================
+  bool Mux(bool a, bool b, bool sel);
 
-bool Mux(bool a, bool b, bool sel);
+  //=================================
+  // 16-Bit Multiplexers
+  //=================================
 
-//=================================
-// 16-Bit Multiplexers
-//=================================
+  Bits16 Mux16(const Bits16 &a, const Bits16 &b, bool sel);
 
-std::array<bool, 16> Mux16(
+  Bits16 Mux4Way16(const Bits16 &a16,
+                   const Bits16 &b16,
+                   const Bits16 &c16,
+                   const Bits16 &d16,
+                   const Bits2 &sel2);
 
-    const std::array<bool, 16> &a, const std::array<bool, 16> &b, bool sel);
-
-std::array<bool, 16> Mux4Way16(const std::array<bool, 16> &a16,
-                               const std::array<bool, 16> &b16,
-                               const std::array<bool, 16> &c16,
-                               const std::array<bool, 16> &d16,
-                               const std::array<bool, 2> &sel2);
-
-std::array<bool, 16>
-Mux8Way16(const std::array<bool, 16> &a16, const std::array<bool, 16> &b16,
-          const std::array<bool, 16> &c16, const std::array<bool, 16> &d16,
-          const std::array<bool, 16> &e16, const std::array<bool, 16> &f16,
-          const std::array<bool, 16> &g16, const std::array<bool, 16> &h16,
-          const std::array<bool, 3> &sel3);
-//=================================
-// 1-Bit Demultiplexers
-//=================================
-std::pair<bool, bool> Dmux(bool in, bool sel);
-//=================================
-// 4-Bit Demultiplexers
-//=================================
-std::array<bool, 4> Dmux4Way(bool in, std::array<bool, 2> sel2);
-//=================================
-// 8-Bit Demultiplexers
-//=================================
-std::array<bool, 8> Dmux8Way(bool in, std::array<bool, 3> sel3);
+  Bits16
+  Mux8Way16(const Bits16 &a16, const Bits16 &b16,
+            const Bits16 &c16, const Bits16 &d16,
+            const Bits16 &e16, const Bits16 &f16,
+            const Bits16 &g16, const Bits16 &h16,
+            const Bits3 &sel3);
+  //=================================
+  // 1-Bit Demultiplexers
+  //=================================
+  std::pair<bool, bool> Dmux(bool in, bool sel);
+  //=================================
+  // 4-Bit Demultiplexers
+  //=================================
+  Bits4 Dmux4Way(bool in, const Bits2 &sel2);
+  //=================================
+  // 8-Bit Demultiplexers
+  //=================================
+  Bits8 Dmux8Way(bool in, const Bits3 &sel3);
 
 } // namespace bitforge::hardware
