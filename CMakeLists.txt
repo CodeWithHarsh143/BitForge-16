@@ -26,6 +26,11 @@ add_executable(mux_test tests/hardware/mux_test.cpp src/hardware/mux.cpp src/har
 target_link_libraries(mux_test PRIVATE Catch2::Catch2WithMain)
 target_include_directories(mux_test PRIVATE include)
 
+add_executable(alu_test tests/hardware/alu_test.cpp src/hardware/alu.cpp src/hardware/gates.cpp src/hardware/arithmetic.cpp src/hardware/mux.cpp)
+target_link_libraries(alu_test PRIVATE Catch2::Catch2WithMain)
+target_include_directories(alu_test PRIVATE include)
+
 add_test(NAME gates_test COMMAND gates_test)
 add_test(NAME arithmetic_test COMMAND arithmetic_test)
 add_test(NAME mux_test COMMAND mux_test)
+add_test(NAME alu_test COMMAND alu_test)

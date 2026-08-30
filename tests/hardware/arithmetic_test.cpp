@@ -96,7 +96,7 @@ TEST_CASE("16-bit adder adds two numbers", "[arithmetic]")
   Bits16 a = to_bits16(12345);
   Bits16 b = to_bits16(6789);
   auto res = adder_subtractor16(a, b, false);
-  REQUIRE(from_bits16(res.result) == 12345u + 6789u);
+  REQUIRE(from_bits16(res) == 12345u + 6789u);
 }
 
 TEST_CASE("16-bit adder with carry-in result", "[arithmetic]")
@@ -104,7 +104,7 @@ TEST_CASE("16-bit adder with carry-in result", "[arithmetic]")
   Bits16 a = to_bits16(65535u); // all ones
   Bits16 b = to_bits16(1u);
   auto res = adder_subtractor16(a, b, false);
-  REQUIRE(from_bits16(res.result) == 0u); // wraps
+  REQUIRE(from_bits16(res) == 0u); // wraps
 }
 
 TEST_CASE("16-bit subtractor subtracts two numbers", "[arithmetic]")
@@ -112,7 +112,7 @@ TEST_CASE("16-bit subtractor subtracts two numbers", "[arithmetic]")
   Bits16 a = to_bits16(42u);
   Bits16 b = to_bits16(10u);
   auto res = adder_subtractor16(a, b, true);
-  REQUIRE(from_bits16(res.result) == 32u);
+  REQUIRE(from_bits16(res) == 32u);
 }
 
 TEST_CASE("16-bit subtractor of equal numbers is zero", "[arithmetic]")
@@ -120,5 +120,5 @@ TEST_CASE("16-bit subtractor of equal numbers is zero", "[arithmetic]")
   Bits16 a = to_bits16(5000u);
   Bits16 b = to_bits16(5000u);
   auto res = adder_subtractor16(a, b, true);
-  REQUIRE(from_bits16(res.result) == 0u);
+  REQUIRE(from_bits16(res) == 0u);
 }

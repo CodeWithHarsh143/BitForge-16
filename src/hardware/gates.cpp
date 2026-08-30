@@ -1,5 +1,4 @@
 #include "bitforge/hardware/gates.hpp"
-#include <array>
 namespace bitforge::hardware
 {
   bool Nand(bool a, bool b)
@@ -21,18 +20,18 @@ namespace bitforge::hardware
   {
     bool not_a = Not(a);
     bool not_b = Not(b);
-    bool not_a_And_not_b = And(not_a, not_b);
-    return Not(not_a_And_not_b);
+    bool not_a_and_not_b = And(not_a, not_b);
+    return Not(not_a_and_not_b);
   }
 
   bool Xor(bool a, bool b)
   {
     bool not_a = Not(a);
     bool not_b = Not(b);
-    bool a_And_not_b = And(a, not_b);
-    bool b_And_not_a = And(not_a, b);
+    bool a_and_not_b = And(a, not_b);
+    bool b_and_not_a = And(not_a, b);
 
-    return Or(a_And_not_b, b_And_not_a);
+    return Or(a_and_not_b, b_and_not_a);
   }
 
   Bits16 Nand16(const Bits16 &a16, const Bits16 &b16)
@@ -53,25 +52,25 @@ namespace bitforge::hardware
 
   Bits16 And16(const Bits16 &a16, const Bits16 &b16)
   {
-    auto a16_Nand16_b16 = Nand16(a16, b16);
-    return Not16(a16_Nand16_b16);
+    auto nand_ab = Nand16(a16, b16);
+    return Not16(nand_ab);
   }
 
   Bits16 Or16(const Bits16 &a16, const Bits16 &b16)
   {
-    auto not_a16 = Not16(a16);
-    auto not_b16 = Not16(b16);
-    auto not_a16_And16_not_b16 = And16(not_a16, not_b16);
-    return Not16(not_a16_And16_not_b16);
+    auto not_a = Not16(a16);
+    auto not_b = Not16(b16);
+    auto not_a_and_not_b = And16(not_a, not_b);
+    return Not16(not_a_and_not_b);
   }
 
   Bits16 Xor16(const Bits16 &a16, const Bits16 &b16)
   {
-    auto not_a16 = Not16(a16);
-    auto not_b16 = Not16(b16);
-    auto a16_And16_not_b16 = And16(a16, not_b16);
-    auto b16_And16_not_a16 = And16(not_a16, b16);
-    return Or16(a16_And16_not_b16, b16_And16_not_a16);
+    auto not_a = Not16(a16);
+    auto not_b = Not16(b16);
+    auto a_and_not_b = And16(a16, not_b);
+    auto b_and_not_a = And16(not_a, b16);
+    return Or16(a_and_not_b, b_and_not_a);
   }
 
   bool Or8Way(const Bits8 &in8)

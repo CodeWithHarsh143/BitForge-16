@@ -1,8 +1,5 @@
 #include "bitforge/hardware/arithmetic.hpp"
 #include "bitforge/hardware/gates.hpp"
-#include <array>
-
-using Bits16 = std::array<bool, 16>;
 
 namespace bitforge::hardware
 {
@@ -23,14 +20,14 @@ namespace bitforge::hardware
   }
   AdderSubtractorResult adder_subtractor(bool a, bool b, bool c, bool sep)
   {
-    bool b_Xor_sep = Xor(b, sep);
-    auto [result, carry] = full_adder(a, b_Xor_sep, c);
+    bool b_xor_sep = Xor(b, sep);
+    auto [result, carry] = full_adder(a, b_xor_sep, c);
     return {result, carry};
   }
   //====================================
   // 16-Bit Adder/Subtractor
   //====================================
-  AdderSubtractor16Result adder_subtractor16(const Bits16 &a, const Bits16 &b, bool sep)
+  Bits16 adder_subtractor16(const Bits16 &a, const Bits16 &b, bool sep)
   {
     Bits16 result{};
     bool carry = sep;
@@ -40,6 +37,6 @@ namespace bitforge::hardware
       result[i] = res;
       carry = car;
     }
-    return {result};
+    return result;
   }
 } // namespace bitforge::hardware
