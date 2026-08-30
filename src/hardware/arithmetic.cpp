@@ -1,8 +1,5 @@
 #include "bitforge/hardware/arithmetic.hpp"
 #include "bitforge/hardware/gates.hpp"
-#include <array>
-
-using Bits16 = std::array<bool, 16>;
 
 namespace bitforge::hardware
 {

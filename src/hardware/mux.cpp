@@ -1,6 +1,5 @@
 #include "bitforge/hardware/mux.hpp"
 #include "bitforge/hardware/gates.hpp"
-#include <array>
 namespace bitforge::hardware
 {
 

@@ -1,6 +1,5 @@
 #pragma once
-#include <array>
-using Bits16 = std::array<bool, 16>;
+#include "bitforge/hardware/types.hpp"
 namespace bitforge::hardware
 {
   //

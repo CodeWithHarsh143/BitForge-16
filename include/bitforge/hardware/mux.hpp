@@ -1,11 +1,6 @@
 #pragma once
 
-#include <array>
-using Bits2 = std::array<bool, 2>;
-using Bits3 = std::array<bool, 3>;
-using Bits4 = std::array<bool, 4>;
-using Bits8 = std::array<bool, 8>;
-using Bits16 = std::array<bool, 16>;
+#include "bitforge/hardware/types.hpp"
 namespace bitforge::hardware
 {
 

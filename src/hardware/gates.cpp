@@ -1,5 +1,4 @@
 #include "bitforge/hardware/gates.hpp"
-#include <array>
 namespace bitforge::hardware
 {
   bool Nand(bool a, bool b)
