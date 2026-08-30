@@ -1,2 +1,0 @@
-/home/harsh/Documents/BitForge-16/build/CMakeFiles/edit_cache.dir
-/home/harsh/Documents/BitForge-16/build/CMakeFiles/rebuild_cache.dir
