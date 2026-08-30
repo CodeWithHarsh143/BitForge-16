@@ -24,9 +24,12 @@ namespace bitforge::hardware
   AdderSubtractorResult adder_subtractor(bool a, bool b, bool c, bool sep)
   {
     bool b_Xor_sep = Xor(b, sep);
-    auto [result, carry] = full_adder(a, b_Xor_sep, sep);
+    auto [result, carry] = full_adder(a, b_Xor_sep, c);
     return {result, carry};
   }
+  //====================================
+  // 16-Bit Adder/Subtractor
+  //====================================
   AdderSubtractor16Result adder_subtractor16(const Bits16 &a, const Bits16 &b, bool sep)
   {
     Bits16 result{};
