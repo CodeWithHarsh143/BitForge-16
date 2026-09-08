@@ -15,6 +15,8 @@ public:
 class DFF
 {
 private:
+  SR_LATCH master;
+  SR_LATCH slave;
   bool Q;
   bool Qn;
 
