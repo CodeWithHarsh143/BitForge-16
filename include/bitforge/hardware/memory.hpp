@@ -8,7 +8,9 @@ private:
 
 public:
   SR_LATCH();
-  bool evalute(bool S, bool R);
+  void evaluate(bool S, bool R);
+  bool getQ();
+  bool getQn();
 };
 class DFF
 {
@@ -16,9 +18,10 @@ private:
   bool Q;
   bool Qn;
 
-private:
+public:
   DFF();
-  bool evaluate(bool D, bool clock);
+  void evaluate(bool D, bool clock);
+  bool getQ();
+  bool getQn();
 };
 #endif
-X
