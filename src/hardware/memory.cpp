@@ -1,5 +1,6 @@
 #include "bitforge/hardware/memory.hpp"
 #include "bitforge/hardware/gates.hpp"
+// SR Latch
 namespace bitforge::hardware
 {
   SR_LATCH::SR_LATCH()
@@ -19,7 +20,7 @@ namespace bitforge::hardware
 
   bool SR_LATCH::getQ() { return Q; }
   bool SR_LATCH::getQn() { return Qn; }
-
+  // JK Flip Flop
   JKFF::JKFF() {}
   void JKFF::evaluate(bool J, bool K, bool clock)
   {
@@ -34,6 +35,7 @@ namespace bitforge::hardware
   }
   bool JKFF::getQ() { return Q; }
   bool JKFF::getQn() { return Qn; }
+  // D Flip Flop
   DFF::DFF() {}
   void DFF::evaluate(bool D, bool clock)
   {
