@@ -1,7 +1,7 @@
-#ifndef MEMORY_HPP
-#define MEMORY_HPP
-class SR_LATCH
-{
+#pragma once
+
+namespace bitforge::hardware {
+class SR_LATCH {
 private:
   bool Q;
   bool Qn;
@@ -12,8 +12,7 @@ public:
   bool getQ();
   bool getQn();
 };
-class DFF
-{
+class JKFF {
 private:
   SR_LATCH master;
   SR_LATCH slave;
@@ -21,9 +20,21 @@ private:
   bool Qn;
 
 public:
+  JKFF();
+  void evaluate(bool J, bool K, bool clock);
+  bool getQ();
+  bool getQn();
+};
+class DFF {
+private:
+  bool Q;
+  bool Qn;
+  JKFF jk;
+
+public:
   DFF();
   void evaluate(bool D, bool clock);
   bool getQ();
   bool getQn();
 };
-#endif
+} // namespace bitforge::hardware
