@@ -30,6 +30,11 @@ add_executable(alu_test tests/hardware/alu_test.cpp src/hardware/alu.cpp src/har
 target_link_libraries(alu_test PRIVATE Catch2::Catch2WithMain)
 target_include_directories(alu_test PRIVATE include)
 
+add_executable(memory_test tests/hardware/memeory_test.cpp src/hardware/memory.cpp src/hardware/gates.cpp)
+target_link_libraries(memory_test PRIVATE Catch2::Catch2WithMain)
+target_include_directories(memory_test PRIVATE include)
+
+
 add_test(NAME gates_test COMMAND gates_test)
 add_test(NAME arithmetic_test COMMAND arithmetic_test)
 add_test(NAME mux_test COMMAND mux_test)
