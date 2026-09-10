@@ -40,3 +40,9 @@ add_test(NAME arithmetic_test COMMAND arithmetic_test)
 add_test(NAME mux_test COMMAND mux_test)
 add_test(NAME alu_test COMMAND alu_test)
 add_test(NAME memory_test COMMAND memory_test)
+
+add_executable(registers_test tests/hardware/registers_test.cpp src/hardware/registers.cpp src/hardware/memory.cpp src/hardware/mux.cpp src/hardware/gates.cpp)
+target_link_libraries(registers_test PRIVATE Catch2::Catch2WithMain)
+target_include_directories(registers_test PRIVATE include)
+
+add_test(NAME registers_test COMMAND registers_test)
