@@ -3,8 +3,8 @@
 // SR Latch
 namespace bitforge::hardware {
 SR_LATCH::SR_LATCH() {
-    Q = false;
-    Qn = false;
+  Q = false;
+  Qn = false;
 }
 
 void SR_LATCH::evaluate(bool S, bool R) {
@@ -23,9 +23,7 @@ void SR_LATCH::evaluate(bool S, bool R) {
 bool SR_LATCH::getQ() { return Q; }
 bool SR_LATCH::getQn() { return Qn; }
 // JK Flip Flop
-JKFF::JKFF() {
-    master.evaluate(true, false);
-}
+JKFF::JKFF() { master.evaluate(false, true); }
 void JKFF::evaluate(bool J, bool K, bool clock) {
   Q = master.getQ();
   Qn = master.getQn();
@@ -49,4 +47,5 @@ void DFF::evaluate(bool D, bool clock) {
 }
 bool DFF::getQ() { return Q; }
 bool DFF::getQn() { return Qn; }
+
 } // namespace bitforge::hardware
