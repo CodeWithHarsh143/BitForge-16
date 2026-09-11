@@ -8,47 +8,72 @@ TEST_CASE("Bit resets to false", "[registers]") {
   REQUIRE(bit.getQ() == false);
 }
 
-TEST_CASE("Bit loads input with one-cycle delay (out(t)=in(t-1))",
-          "[registers]") {
+TEST_CASE("Bit loads input when load is true", "[registers]") {
   Bit bit;
 
-  bit.evaluate(false, false); // cycle 1: nothing loaded, out stays reset value
-  REQUIRE(bit.getQ() == false);
-
-  bit.evaluate(true, true); // cycle 2: load 1, appears next cycle
+  bit.evaluate(true, bit.getQ(), true); // load 1
   REQUIRE(bit.getQ() == true);
 
-  bit.evaluate(true, false);   // cycle 3: no load
-  REQUIRE(bit.getQ() == true); // out(3) = in(2) = 1
+  bit.evaluate(false, bit.getQ(), true); // load 0
+  REQUIRE(bit.getQ() == false);
 }
 
-TEST_CASE("Bit holds value when load is false (out(t)=out(t-1))",
-          "[registers]") {
+TEST_CASE("Bit holds value when load is false", "[registers]") {
   Bit bit;
 
-  bit.evaluate(true, true);
-  bit.evaluate(false, false);
+  bit.evaluate(true, bit.getQ(), true); // load 1
   REQUIRE(bit.getQ() == true);
 
-  bit.evaluate(false, false); // hold even though in changed
+  bit.evaluate(true, bit.getQ(), false); // hold even though input changed
   REQUIRE(bit.getQ() == true);
 
-  bit.evaluate(true, false); // still holding
+  bit.evaluate(false, bit.getQ(), false); // still holding
   REQUIRE(bit.getQ() == true);
 }
 
-TEST_CASE("Bit toggles between 0 and 1", "[registers]") {
-  Bit bit;
+TEST_CASE("Register loads 16-bit value", "[registers]") {
+  Register reg;
 
-  bit.evaluate(true, true);
-  bit.evaluate(false, false);
-  REQUIRE(bit.getQ() == true);
+  Bits16 in{};
+  in[0] = true;
+  in[5] = true;
+  in[15] = true;
 
-  bit.evaluate(false, true);
-  bit.evaluate(false, false);
-  REQUIRE(bit.getQ() == false);
+  reg.evaluate(in, true);
+  Bits16 out = reg.getQ();
 
-  bit.evaluate(true, true);
-  bit.evaluate(false, false);
-  REQUIRE(bit.getQ() == true);
+  REQUIRE(out[0] == true);
+  REQUIRE(out[5] == true);
+  REQUIRE(out[15] == true);
+  REQUIRE(out[1] == false);
+  REQUIRE(out[14] == false);
+}
+
+TEST_CASE("Register holds value when load is false", "[registers]") {
+  Register reg;
+
+  Bits16 in{};
+  in[0] = true;
+
+  reg.evaluate(in, true);
+  REQUIRE(reg.getQ()[0] == true);
+
+  Bits16 hold_in{};
+  reg.evaluate(hold_in, false);
+  REQUIRE(reg.getQ()[0] == true);
+}
+
+TEST_CASE("Register overwrites all bits when loading", "[registers]") {
+  Register reg;
+
+  Bits16 ones{};
+  ones.fill(true);
+  reg.evaluate(ones, true);
+  REQUIRE(reg.getQ()[0] == true);
+  REQUIRE(reg.getQ()[15] == true);
+
+  Bits16 zeros{};
+  reg.evaluate(zeros, true);
+  REQUIRE(reg.getQ()[0] == false);
+  REQUIRE(reg.getQ()[15] == false);
 }
