@@ -1,6 +1,5 @@
 #include "bitforge/hardware/memory.hpp"
 #include "bitforge/hardware/gates.hpp"
-#include "bitforge/hardware/mux.hpp"
 // SR Latch
 namespace bitforge::hardware {
 SR_LATCH::SR_LATCH() {
