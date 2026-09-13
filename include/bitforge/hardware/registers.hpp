@@ -10,7 +10,7 @@ private:
 
 public:
   Bit();
-  void evaluate(bool inp, bool out, bool load);
+  void evaluate(bool inp, bool prev, bool load);
   bool getQ();
 };
 class Register {
