@@ -46,3 +46,9 @@ target_link_libraries(registers_test PRIVATE Catch2::Catch2WithMain)
 target_include_directories(registers_test PRIVATE include)
 
 add_test(NAME registers_test COMMAND registers_test)
+
+add_executable(ram_test tests/hardware/ram_test.cpp src/hardware/ram.cpp src/hardware/registers.cpp src/hardware/memory.cpp src/hardware/mux.cpp src/hardware/gates.cpp)
+target_link_libraries(ram_test PRIVATE Catch2::Catch2WithMain)
+target_include_directories(ram_test PRIVATE include)
+
+add_test(NAME ram_test COMMAND ram_test)
