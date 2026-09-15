@@ -21,7 +21,7 @@ private:
 
 public:
   Register();
-  void evaluate(Bits16 &inp, bool load);
+  void evaluate(const Bits16 &inp, bool load);
   Bits16 getQ();
 };
 } // namespace bitforge::hardware

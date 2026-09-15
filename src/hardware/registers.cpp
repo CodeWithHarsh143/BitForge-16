@@ -22,7 +22,7 @@ Register::Register() {
     Q[pos] = bit.getQ();
   }
 }
-void Register::evaluate(Bits16 &inp, bool load) {
+void Register::evaluate(const Bits16 &inp, bool load) {
   for (int pos = 0; pos < 16; pos++) {
     bit.evaluate(inp[pos], Q[pos], load);
     Q[pos] = bit.getQ();
