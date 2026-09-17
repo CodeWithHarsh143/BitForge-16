@@ -38,6 +38,42 @@ Bits16 Read64(RAM64 &ram, const Bits6 &address) {
   Bits16 in{};
   return ram.evaluate(in, address, false);
 }
+
+Bits9 Address9(int n) {
+  Bits9 address;
+  for (int i = 0; i < 9; i++)
+    address[i] = n & (1 << i);
+  return address;
+}
+
+Bits12 Address12(int n) {
+  Bits12 address;
+  for (int i = 0; i < 12; i++)
+    address[i] = n & (1 << i);
+  return address;
+}
+
+Bits14 Address14(int n) {
+  Bits14 address;
+  for (int i = 0; i < 14; i++)
+    address[i] = n & (1 << i);
+  return address;
+}
+
+Bits16 Read512(RAM512 &ram, const Bits9 &address) {
+  Bits16 in{};
+  return ram.evaluate(in, address, false);
+}
+
+Bits16 Read4K(RAM4K &ram, const Bits12 &address) {
+  Bits16 in{};
+  return ram.evaluate(in, address, false);
+}
+
+Bits16 Read16K(RAM16K &ram, const Bits14 &address) {
+  Bits16 in{};
+  return ram.evaluate(in, address, false);
+}
 } // namespace
 
 TEST_CASE("RAM8 resets all registers to zero", "[ram]") {
@@ -260,4 +296,243 @@ TEST_CASE("RAM64 words in different chips are independent", "[ram]") {
   REQUIRE(out0[3] == false);
   REQUIRE(out1[3] == true);
   REQUIRE(out1[12] == false);
+}
+
+TEST_CASE("RAM512 resets all registers to zero", "[ram]") {
+  RAM512 ram;
+  for (int i = 0; i < 512; i++) {
+    Bits16 out = Read512(ram, Address9(i));
+    REQUIRE(out == Bits16{});
+  }
+}
+
+TEST_CASE("RAM512 writes and reads back the same address", "[ram]") {
+  RAM512 ram;
+  Bits16 in = MakeBit(3);
+
+  ram.evaluate(in, Address9(4), true);
+  Bits16 out = Read512(ram, Address9(4));
+
+  REQUIRE(out[3] == true);
+  REQUIRE(out[0] == false);
+}
+
+TEST_CASE("RAM512 holds value when load is false", "[ram]") {
+  RAM512 ram;
+  Bits16 in = MakeBit(9);
+
+  ram.evaluate(in, Address9(5), true);
+
+  Bits16 out = Read512(ram, Address9(5));
+  REQUIRE(out[9] == true);
+}
+
+TEST_CASE("RAM512 can address all 512 registers", "[ram]") {
+  RAM512 ram;
+  for (int i = 0; i < 512; i++) {
+    Bits16 v = MakeBit(i % 16);
+    ram.evaluate(v, Address9(i), true);
+  }
+  for (int i = 0; i < 512; i++) {
+    Bits16 out = Read512(ram, Address9(i));
+    REQUIRE(out[i % 16] == true);
+    for (int j = 0; j < 16; j++) {
+      if (j != (i % 16))
+        REQUIRE(out[j] == false);
+    }
+  }
+}
+
+TEST_CASE("RAM512 words in different chips are independent", "[ram]") {
+  RAM512 ram;
+  Bits16 low = MakeBit(12);
+  Bits16 high = MakeBit(3);
+
+  ram.evaluate(low, Address9(10), true);
+  ram.evaluate(high, Address9(42), true);
+
+  Bits16 out0 = Read512(ram, Address9(10));
+  Bits16 out1 = Read512(ram, Address9(42));
+
+  REQUIRE(out0[12] == true);
+  REQUIRE(out0[3] == false);
+  REQUIRE(out1[3] == true);
+  REQUIRE(out1[12] == false);
+}
+
+TEST_CASE("RAM512 overwrites existing data when writing", "[ram]") {
+  RAM512 ram;
+  Bits16 first = MakeBit(5);
+  Bits16 second = MakeBit(13);
+
+  ram.evaluate(first, Address9(6), true);
+  ram.evaluate(second, Address9(6), true);
+
+  Bits16 out = Read512(ram, Address9(6));
+  REQUIRE(out[13] == true);
+  REQUIRE(out[5] == false);
+}
+
+TEST_CASE("RAM4K resets all registers to zero", "[ram]") {
+  RAM4K ram;
+  for (int i = 0; i < 8; i++)
+    for (int j = 0; j < 4096; j += 199)
+      REQUIRE(Read4K(ram, Address12(i + j)) == Bits16{});
+}
+
+TEST_CASE("RAM4K writes and reads back the same address", "[ram]") {
+  RAM4K ram;
+  Bits16 in = MakeBit(3);
+
+  ram.evaluate(in, Address12(4), true);
+  Bits16 out = Read4K(ram, Address12(4));
+
+  REQUIRE(out[3] == true);
+  REQUIRE(out[0] == false);
+}
+
+TEST_CASE("RAM4K holds value when load is false", "[ram]") {
+  RAM4K ram;
+  Bits16 in = MakeBit(9);
+
+  ram.evaluate(in, Address12(5), true);
+
+  Bits16 out = Read4K(ram, Address12(5));
+  REQUIRE(out[9] == true);
+}
+
+TEST_CASE("RAM4K can address registers across all sub-chips", "[ram]") {
+  RAM4K ram;
+  int samples[32];
+  int count = 0;
+  for (int i = 0; i < 8; i++)
+    samples[count++] = i;
+  for (int i = 512; i < 4096; i += 512)
+    samples[count++] = i;
+
+  for (int k = 0; k < count; k++) {
+    Bits16 v = MakeBit(k % 16);
+    ram.evaluate(v, Address12(samples[k]), true);
+  }
+  for (int k = 0; k < count; k++) {
+    Bits16 out = Read4K(ram, Address12(samples[k]));
+    REQUIRE(out[k % 16] == true);
+    for (int j = 0; j < 16; j++) {
+      if (j != (k % 16))
+        REQUIRE(out[j] == false);
+    }
+  }
+}
+
+TEST_CASE("RAM4K words in different chips are independent", "[ram]") {
+  RAM4K ram;
+  Bits16 low = MakeBit(12);
+  Bits16 high = MakeBit(3);
+
+  ram.evaluate(low, Address12(10), true);
+  ram.evaluate(high, Address12(42), true);
+
+  Bits16 out0 = Read4K(ram, Address12(10));
+  Bits16 out1 = Read4K(ram, Address12(42));
+
+  REQUIRE(out0[12] == true);
+  REQUIRE(out0[3] == false);
+  REQUIRE(out1[3] == true);
+  REQUIRE(out1[12] == false);
+}
+
+TEST_CASE("RAM4K overwrites existing data when writing", "[ram]") {
+  RAM4K ram;
+  Bits16 first = MakeBit(5);
+  Bits16 second = MakeBit(13);
+
+  ram.evaluate(first, Address12(6), true);
+  ram.evaluate(second, Address12(6), true);
+
+  Bits16 out = Read4K(ram, Address12(6));
+REQUIRE(out[13] == true);
+    REQUIRE(out[5] == false);
+}
+
+TEST_CASE("RAM16K resets to zero at sampled addresses", "[ram]") {
+  RAM16K ram;
+  for (int i = 0; i < 16384; i += 1024) {
+    for (int k = 0; k < 8; k++)
+      REQUIRE(Read16K(ram, Address14(i + k)) == Bits16{});
+  }
+}
+
+TEST_CASE("RAM16K writes and reads back the same address", "[ram]") {
+  RAM16K ram;
+  Bits16 in = MakeBit(3);
+
+  ram.evaluate(in, Address14(4), true);
+  Bits16 out = Read16K(ram, Address14(4));
+
+  REQUIRE(out[3] == true);
+  REQUIRE(out[0] == false);
+}
+
+TEST_CASE("RAM16K can address all four RAM4K chips", "[ram]") {
+  RAM16K ram;
+  for (int i = 0; i < 4; i++) {
+    Bits16 v = MakeBit(i);
+    ram.evaluate(v, Address14(i), true);
+  }
+  for (int i = 0; i < 4; i++) {
+    Bits16 out = Read16K(ram, Address14(i));
+    REQUIRE(out[i] == true);
+  }
+}
+
+TEST_CASE("RAM16K words in different chips are independent", "[ram]") {
+  RAM16K ram;
+  Bits16 low = MakeBit(12);
+  Bits16 high = MakeBit(3);
+
+  ram.evaluate(low, Address14(10), true);
+  ram.evaluate(high, Address14(42), true);
+
+  Bits16 out0 = Read16K(ram, Address14(10));
+  Bits16 out1 = Read16K(ram, Address14(42));
+
+  REQUIRE(out0[12] == true);
+  REQUIRE(out0[3] == false);
+  REQUIRE(out1[3] == true);
+  REQUIRE(out1[12] == false);
+}
+
+TEST_CASE("RAM16K can write across the full address space", "[ram]") {
+  RAM16K ram;
+  for (int i = 0; i < 16384; i += 1024) {
+    Bits16 v = MakeBit(i % 16);
+    ram.evaluate(v, Address14(i), true);
+  }
+  for (int i = 0; i < 16384; i += 1024) {
+    Bits16 out = Read16K(ram, Address14(i));
+    REQUIRE(out[i % 16] == true);
+  }
+}
+
+TEST_CASE("RAM16K holds value when load is false", "[ram]") {
+  RAM16K ram;
+  Bits16 in = MakeBit(9);
+
+  ram.evaluate(in, Address14(5), true);
+
+  Bits16 out = Read16K(ram, Address14(5));
+  REQUIRE(out[9] == true);
+}
+
+TEST_CASE("RAM16K overwrites existing data when writing", "[ram]") {
+  RAM16K ram;
+  Bits16 first = MakeBit(5);
+  Bits16 second = MakeBit(13);
+
+  ram.evaluate(first, Address14(6), true);
+  ram.evaluate(second, Address14(6), true);
+
+  Bits16 out = Read16K(ram, Address14(6));
+  REQUIRE(out[13] == true);
+  REQUIRE(out[5] == false);
 }
