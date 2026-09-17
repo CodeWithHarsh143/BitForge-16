@@ -1,27 +1,24 @@
 #pragma once
 #include "bitforge/hardware/types.hpp"
-namespace bitforge::hardware
-{
-  //
-  // 1-Bit Adder/Subtractor
-  //
-  struct HalfAdderResult
-  {
-    const bool sum;
-    const bool carry;
-  };
-  struct FullAdderResult
-  {
-    const bool sum;
-    const bool carry;
-  };
-  struct AdderSubtractorResult
-  {
-    const bool result;
-    const bool carry;
-  };
-  HalfAdderResult half_adder(bool a, bool b);
-  FullAdderResult full_adder(bool a, bool b, bool c);
-  AdderSubtractorResult adder_subtractor(bool a, bool b, bool c, bool sep);
-  Bits16 adder_subtractor16(const Bits16 &a, const Bits16 &b, bool sep);
+namespace bitforge::hardware {
+//
+// 1-Bit Adder/Subtractor
+//
+struct HalfAdderResult {
+  const bool sum;
+  const bool carry;
+};
+struct FullAdderResult {
+  const bool sum;
+  const bool carry;
+};
+struct AdderSubtractorResult {
+  const bool result;
+  const bool carry;
+};
+HalfAdderResult half_adder(bool a, bool b);
+FullAdderResult full_adder(bool a, bool b, bool c);
+AdderSubtractorResult adder_subtractor(bool a, bool b, bool c, bool sep);
+Bits16 adder_subtractor16(const Bits16 &a, const Bits16 &b, bool sep);
+Bits16 increment_adder(const Bits16 &a);
 } // namespace bitforge::hardware
