@@ -10,6 +10,7 @@ using Bits8 = std::array<bool, 8>;
 using Bits9 = std::array<bool, 9>;
 using Bits12 = std::array<bool, 12>;
 using Bits14 = std::array<bool, 14>;
+using Bits15 = std::array<bool, 15>;
 using Bits16 = std::array<bool, 16>;
 
 } // namespace bitforge::hardware
