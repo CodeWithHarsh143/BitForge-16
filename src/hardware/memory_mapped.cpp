@@ -7,15 +7,16 @@ Screen8K::Screen8K() {}
 
 Bits16 Screen8K::evaluate(const Bits16 &inp, const Bits13 &address, bool load) {
   // MSB (value 4096) selects chip, lower 12 bits address inside.
+  // Pruned: only the selected chip is evaluated. Same result as
+  // Dmux(load)->both chips + Mux(out), because load=0 leaves the
+  // other chip untouched and Mux discards its output anyway.
   bool sel = address[12];
   Bits12 inner{};
   for (int i = 0; i < 12; i++)
     inner[i] = address[i];
-
-  auto [l0, l1] = Dmux(load, sel);
-  Bits16 o0 = low.evaluate(inp, inner, l0);
-  Bits16 o1 = high.evaluate(inp, inner, l1);
-  return Mux16(o0, o1, sel);
+  if (!sel)
+    return low.evaluate(inp, inner, load);
+  return high.evaluate(inp, inner, load);
 }
 
 Bits16 Screen8K::read(const Bits13 &address) {
@@ -29,6 +30,29 @@ bool Memory::isZero13(const Bits13 &a) {
     if (b)
       return false;
   return true;
+}
+
+int Memory::toOffset13(const Bits13 &a) {
+  int v = 0;
+  for (int i = 0; i < 13; i++)
+    if (a[i])
+      v |= (1 << i);
+  return v;
+}
+
+uint16_t Memory::toU16(const Bits16 &b) {
+  uint16_t v = 0;
+  for (int i = 0; i < 16; i++)
+    if (b[i])
+      v |= static_cast<uint16_t>(1u << i);
+  return v;
+}
+
+Bits16 Memory::toBits16(uint16_t v) {
+  Bits16 b{};
+  for (int i = 0; i < 16; i++)
+    b[i] = (v >> i) & 1u;
+  return b;
 }
 
 Bits16 Memory::evaluate(const Bits16 &inp, const Bits15 &address, bool load) {
@@ -48,7 +72,10 @@ Bits16 Memory::evaluate(const Bits16 &inp, const Bits15 &address, bool load) {
     Bits13 scrAddr{};
     for (int i = 0; i < 13; i++)
       scrAddr[i] = address[i];
-    return screen.evaluate(inp, scrAddr, load);
+    Bits16 out = screen.evaluate(inp, scrAddr, load);
+    if (load)
+      screenFlat[toOffset13(scrAddr)] = toU16(inp); // keep shadow in sync
+    return out;
   }
 
   // bit14==1 && bit13==1: only 24576 is keyboard, rest invalid.
@@ -73,10 +100,12 @@ void Memory::clearKeyboard() {
 }
 
 Bits16 Memory::readScreen(int offset) {
-  Bits13 a{};
-  for (int i = 0; i < 13; i++)
-    a[i] = (offset >> i) & 1;
-  return screen.read(a);
+  // O(1) flat shadow read for 60 FPS display. No hierarchy walk.
+  // Masked like hardware: offset wraps into 0-8191.
+  int idx = offset & 8191;
+  if (offset < 0)
+    idx = ((offset % 8192) + 8192) % 8192;
+  return toBits16(screenFlat[idx]);
 }
 
 } // namespace bitforge::hardware

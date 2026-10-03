@@ -2,6 +2,8 @@
 #include "bitforge/hardware/ram.hpp"
 #include "bitforge/hardware/registers.hpp"
 #include "bitforge/hardware/types.hpp"
+#include <array>
+#include <cstdint>
 
 namespace bitforge::hardware {
 
@@ -23,10 +25,17 @@ public:
 class Memory {
 private:
   RAM16K ram;      // 0-16383
-  Screen8K screen; // 16384-24575
+  Screen8K screen; // 16384-24575 (hierarchy: CPU-truth)
   Register kbd;    // 24576 only (1 word)
+  // Flat shadow of screen for 60 FPS display: same data as `screen`,
+  // updated on every screen write. Display reads this O(1); CPU reads
+  // still go through the hierarchy. Both start zero, stay in sync.
+  std::array<uint16_t, 8192> screenFlat{};
 
   static bool isZero13(const Bits13 &a);
+  static int toOffset13(const Bits13 &a);
+  static uint16_t toU16(const Bits16 &b);
+  static Bits16 toBits16(uint16_t v);
 
 public:
   Memory();

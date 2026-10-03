@@ -293,36 +293,94 @@ add_test(
 )
 
 
+# ------------------------------------------------------------
+
+add_executable(
+    memory_mapped_test
+
+    tests/hardware/memory_mapped_test.cpp
+
+    src/hardware/memory_mapped.cpp
+    src/hardware/ram.cpp
+    src/hardware/registers.cpp
+    src/hardware/memory.cpp
+    src/hardware/mux.cpp
+    src/hardware/gates.cpp
+)
+
+target_include_directories(
+    memory_mapped_test
+    PRIVATE
+    ${BITFORGE_INCLUDE_DIR}
+)
+
+target_link_libraries(
+    memory_mapped_test
+    PRIVATE
+    Catch2::Catch2WithMain
+)
+
+add_test(
+    NAME memory_mapped_test
+    COMMAND memory_mapped_test
+)
+
+
+# ------------------------------------------------------------
+
+add_executable(
+    screen_key_test
+
+    tests/display/screen_key_test.cpp
+
+    src/display/screen_view.cpp
+)
+
+target_include_directories(
+    screen_key_test
+    PRIVATE
+    ${BITFORGE_INCLUDE_DIR}
+)
+
+target_link_libraries(
+    screen_key_test
+    PRIVATE
+    Catch2::Catch2WithMain
+    SDL3::SDL3
+)
+
+add_test(
+    NAME screen_key_test
+    COMMAND screen_key_test
+)
+
+
 # ============================================================
 # BitForge Applications
 # ============================================================
 
-# SDL3 application will go here.
-#
-# Example:
-#
-# add_executable(
-#     bitforge_simulator
-#
-#     apps/simulator/main.cpp
-#
-#     src/hardware/memory.cpp
-#     src/hardware/memory_mapped.cpp
-#     src/hardware/ram.cpp
-#     src/hardware/registers.cpp
-#     src/hardware/mux.cpp
-#     src/hardware/gates.cpp
-#     src/hardware/arithmetic.cpp
-# )
-#
-# target_include_directories(
-#     bitforge_simulator
-#     PRIVATE
-#     ${BITFORGE_INCLUDE_DIR}
-# )
-#
-# target_link_libraries(
-#     bitforge_simulator
-#     PRIVATE
-#     SDL3::SDL3
-# )
+add_executable(
+    bitforge_simulator
+
+    apps/simulator/main.cpp
+
+    src/display/screen_view.cpp
+    src/hardware/memory_mapped.cpp
+    src/hardware/ram.cpp
+    src/hardware/registers.cpp
+    src/hardware/memory.cpp
+    src/hardware/mux.cpp
+    src/hardware/gates.cpp
+)
+
+target_include_directories(
+    bitforge_simulator
+    PRIVATE
+    ${BITFORGE_INCLUDE_DIR}
+)
+
+target_link_libraries(
+    bitforge_simulator
+    PRIVATE
+    SDL3::SDL3
+)
