@@ -59,7 +59,7 @@ bool ScreenView::present(const uint32_t *pixels) {
   return SDL_RenderPresent(renderer_);
 }
 
-void ScreenView::shutdown() {
+void ScreenView::shutdown(){
   if (texture_) {
     SDL_DestroyTexture(texture_);
     texture_ = nullptr;
