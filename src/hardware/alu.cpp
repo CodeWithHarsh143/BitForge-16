@@ -23,7 +23,7 @@ namespace bitforge::hardware
     {
       result[i] = Xor(result[i], no);
     }
-    const bool ng = result[0];
+    const bool ng = result[15]; // sign bit (MSB) in LSB-first order
     Bits8 high_half, low_half;
     std::copy(result.begin(), result.begin() + 8, high_half.begin());
     std::copy(result.begin() + 8, result.begin() + 16, low_half.begin());

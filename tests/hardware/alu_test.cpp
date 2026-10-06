@@ -5,12 +5,10 @@ using namespace bitforge::hardware;
 
 static Bits16 to_bits16(unsigned int value)
 {
+  // LSB-first project convention: b[0] = value 1.
   Bits16 b{};
-  for (int i = 15; i >= 0 && value; --i)
-  {
-    b[i] = value & 1;
-    value >>= 1;
-  }
+  for (int i = 0; i < 16; ++i)
+    b[i] = (value >> i) & 1u;
   return b;
 }
 
@@ -19,7 +17,8 @@ static int from_bits16_signed(const Bits16 &b)
 {
   int value = 0;
   for (int i = 0; i < 16; ++i)
-    value = (value << 1) | (b[i] ? 1 : 0);
+    if (b[i])
+      value |= (1 << i);
   if (value & 0x8000)
     value -= 0x10000;
   return value;
@@ -30,7 +29,8 @@ static unsigned int from_bits16_unsigned(const Bits16 &b)
 {
   unsigned int value = 0;
   for (int i = 0; i < 16; ++i)
-    value = (value << 1) | (b[i] ? 1u : 0u);
+    if (b[i])
+      value |= (1u << i);
   return value;
 }
 
