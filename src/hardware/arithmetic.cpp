@@ -27,7 +27,8 @@ AdderSubtractorResult adder_subtractor(bool a, bool b, bool c, bool sep) {
 Bits16 adder_subtractor16(const Bits16 &a, const Bits16 &b, bool sep) {
   Bits16 result{};
   bool carry = sep;
-  for (int i = 15; i >= 0; --i) {
+  // LSB-first: carry flows from bit0 (value 1) up to bit15.
+  for (int i = 0; i < 16; ++i) {
     auto [res, car] = adder_subtractor(a[i], b[i], carry, sep);
     result[i] = res;
     carry = car;
