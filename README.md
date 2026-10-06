@@ -1,4 +1,4 @@
-# BitForge-16
+# HackCpu-16
 
 A 16-bit Hack computer emulator written in C++, built bottom-up from NAND gates
 following the **Nand2Tetris (Part 1: Hardware)** track. Every chip in the
