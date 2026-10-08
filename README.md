@@ -631,5 +631,7 @@ The objective is not just to emulate a Hack computer, but to understand the chai
 
 ---
 
-**HackCpu-16 — from NAND gates to a running computer.**
-      
+C++17, CMake, SDL3 (display/input), Catch2 (tests). No external HDL tooling:
+the hardware lives in ordinary, debuggable code.
+Making 16 bit hack cpu from nand gate as a starting point. Refrence nand to tetris playlist in yt (currrently learning assembly)
+Right Now-> working on cpu and assembler 
